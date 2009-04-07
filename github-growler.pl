@@ -55,7 +55,7 @@ while (1) {
 
 sub get_text {
     $tree->parse(shift || '');
-    my $text = $tree->findvalue( '//div[contains(concat(" ",@class," ")," message ")]' );
+    my $text = $tree->findvalue( '//div[contains(concat(" ",@class," ")," message ")]/text()' );
     $text =~ s/^\s*[0-9a-f]{40}\s*//;
     return $text;
 }
