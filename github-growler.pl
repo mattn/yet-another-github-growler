@@ -26,11 +26,11 @@ my $deduper = XML::Feed::Deduper->new(
 );
 
 my $growl = GNTP::Growl->new(
-	AppName => 'Yet Another Github Growler',
-	Password => 'secret',
+    AppName => 'Yet Another Github Growler',
+    Password => 'secret',
 );
 $growl->register([
-	{ Name => 'Notify', Enabled => 'True' },
+    { Name => 'Notify', Enabled => 'True' },
 ]);
 my $tree = HTML::TreeBuilder::XPath->new;
 
@@ -41,13 +41,13 @@ while (1) {
 
     my $i;
     for my $entry ($deduper->dedup($feed->entries)) {
-		warn get_icon($entry->author),"\n";
-		$growl->notify(
-			Event   => 'Notify',
-			Title   => encode_utf8($entry->title),
-			Message => encode_utf8(get_text($entry->content->body)),
-			Icon    => get_icon($entry->author),
-		);
+        warn get_icon($entry->author),"\n";
+        $growl->notify(
+            Event   => 'Notify',
+            Title   => encode_utf8($entry->title),
+            Message => encode_utf8(get_text($entry->content->body)),
+            Icon    => get_icon($entry->author),
+        );
         last if $i++ > 10;
     }
     sleep 5;
@@ -57,13 +57,13 @@ sub get_text {
     $tree->parse(shift || '');
     my $text = $tree->findvalue( '//div[contains(concat(" ",@class," ")," message ")]' );
     $text =~ s/^\s*[0-9a-f]{40}\s*//;
-	return $text;
+    return $text;
 }
 
 sub get_icon {
     my $name = shift;
     my $icon = (glob("$dir/icon/$name\.*"))[-1] || '';
-	return $icon if $icon;
+    return $icon if $icon;
 
     use Web::Scraper;
     my $scraper = scraper {
@@ -72,7 +72,7 @@ sub get_icon {
             my $suffix = (split(/\./, $_))[-1];
             my $path = "$dir/icon/$name.$suffix";
             LWP::Simple::mirror($_, $path);
-			return $path;
+            return $path;
         } ];
     };
     $icon = eval { $scraper->scrape(URI->new("http://github.com/$name")) } || {};
